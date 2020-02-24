@@ -1,2 +1,12 @@
-face=['A','1','2','3','4','5','6','7','8','9','10','J','Q','K']
-suit=['C','S','D','H']
+import random
+
+
+face = ['A', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+suit = ['C','S','D','H']
+
+class card():
+        def __init__(self):
+            self.face=random.choice(face)
+            self.suit = random.choice(suit)
+obj=card()
+print(obj.face,obj.suit)
