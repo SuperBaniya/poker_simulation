@@ -1,2 +1,2 @@
-value_dict = {'T': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14}
-suits=['Clubs','Spades','Hearts','Diamonds']
+face=['A','1','2','3','4','5','6','7','8','9','10','J','Q','K']
+suit=['C','S','D','H']
