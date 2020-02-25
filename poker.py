@@ -10,10 +10,20 @@ class card():
         self.face = random.choice(face)
         self.suit = random.choice(suit)
 
+    def printCard(self, card):
+        print(self.face, self.suit)
+
 
 class player(card):
-    playerCards = []
+    playerCards = [card(), card()]
 
     def __init__(self):
-        self.playerCards[0] = card()
-        self.playerCards[1] = card()
+        pass
+
+    def printPlayerCards(self):
+        print(self.playerCards[0].face, self.playerCards[0].suit)
+        print(self.playerCards[1].face, self.playerCards[1].suit)
+
+
+obj = player()
+obj.printPlayerCards()
