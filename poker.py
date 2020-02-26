@@ -19,6 +19,8 @@ class card():
 class player():
     pile = 100000
     name = 'Player'
+    card1 = card()
+    card2 = card()
 
     def __init__(self):
         pass
@@ -26,12 +28,6 @@ class player():
     def setPlayerDetails(self, name, buyin=10000):
         self.pile = buyin
         self.name = name
-        self.card1 = card()
-        self.card2 = card()
-
-    def printPlayerCards(self):
-        print(self.card1.face, self.card1.suit)
-        print(self.card2.face, self.card2.suit)
 
     def printPlayer(self):
         print(self.name, self.pile)
@@ -39,7 +35,6 @@ class player():
 
 class table():
     pot = 0
-    acivePlayers = []
 
     def __init__(self):
         pass
@@ -52,12 +47,21 @@ for i in suit:
         newcard.makecard(j, i)
         deck.append(newcard)
 
-table = table()
 players = ['Naman', 'CrimeMasterGOGO', 'Bulla',
-           'Modiji', 'Doodhwala', 'Homer Simpson']
-# for i in players:
-#     newPlayer = player()
-#     newPlayer.setPlayerDetails(i)
-#     newPlayer.printPlayer()
-#     newPlayer.printPlayerCards()
-#     table.acivePlayers.append(newPlayer)
+           'Modiji', 'Doodhwala', 'Homer Simpson', 'Ibu hatela']
+
+activePlayers = []
+for i in players:
+    card1 = random.choice(deck)
+    deck.remove(card1)
+    card2 = random.choice(deck)
+    deck.remove(card2)
+    newplayer = player()
+    newplayer.card1 = card1
+    newplayer.card2 = card2
+    newplayer.setPlayerDetails(i)
+    activePlayers.append(newplayer)
+for i in activePlayers:
+    i.printPlayer()
+    i.card1.printCard()
+    i.card2.printCard()
