@@ -6,11 +6,14 @@ suit = ('C', 'S', 'D', 'H')
 
 class card():
     def __init__(self):
-        self.face = random.choice(face)
-        self.suit = random.choice(suit)
+        pass
 
     def printCard(self):
         print(self.face, self.suit)
+
+    def makecard(self, f, s):
+        self.face = f
+        self.suit = s
 
 
 class player():
@@ -42,12 +45,19 @@ class table():
         pass
 
 
+deck = []
+for i in suit:
+    for j in face:
+        newcard = card()
+        newcard.makecard(j, i)
+        deck.append(newcard)
+
 table = table()
 players = ['Naman', 'CrimeMasterGOGO', 'Bulla',
            'Modiji', 'Doodhwala', 'Homer Simpson']
-for i in players:
-    newPlayer = player()
-    newPlayer.setPlayerDetails(i)
-    newPlayer.printPlayer()
-    newPlayer.printPlayerCards()
-    table.acivePlayers.append(newPlayer)
+# for i in players:
+#     newPlayer = player()
+#     newPlayer.setPlayerDetails(i)
+#     newPlayer.printPlayer()
+#     newPlayer.printPlayerCards()
+#     table.acivePlayers.append(newPlayer)
