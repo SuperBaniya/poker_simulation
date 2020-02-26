@@ -2,6 +2,10 @@ import random
 
 face = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K')
 suit = ('C', 'S', 'D', 'H')
+activePlayers = []
+deck = []
+players = ['Naman', 'CrimeMasterGOGO', 'Bulla',
+           'Modiji', 'Doodhwala', 'Homer Simpson', 'Ibu hatela']
 
 
 class card():
@@ -40,28 +44,35 @@ class table():
         pass
 
 
-deck = []
-for i in suit:
-    for j in face:
-        newcard = card()
-        newcard.makecard(j, i)
-        deck.append(newcard)
+def makeDeck():
+    for i in suit:
+        for j in face:
+            newcard = card()
+            newcard.makecard(j, i)
+            deck.append(newcard)
 
-players = ['Naman', 'CrimeMasterGOGO', 'Bulla',
-           'Modiji', 'Doodhwala', 'Homer Simpson', 'Ibu hatela']
 
-activePlayers = []
-for i in players:
-    card1 = random.choice(deck)
-    deck.remove(card1)
-    card2 = random.choice(deck)
-    deck.remove(card2)
-    newplayer = player()
-    newplayer.card1 = card1
-    newplayer.card2 = card2
-    newplayer.setPlayerDetails(i)
-    activePlayers.append(newplayer)
-for i in activePlayers:
-    i.printPlayer()
-    i.card1.printCard()
-    i.card2.printCard()
+def dealCards():
+    for i in players:
+        card1 = random.choice(deck)
+        deck.remove(card1)
+        card2 = random.choice(deck)
+        deck.remove(card2)
+        newplayer = player()
+        newplayer.card1 = card1
+        newplayer.card2 = card2
+        newplayer.setPlayerDetails(i)
+        activePlayers.append(newplayer)
+
+
+def showPlayers():
+    for i in activePlayers:
+        i.printPlayer()
+        i.card1.printCard()
+        i.card2.printCard()
+
+
+if __name__ == "__main__":
+    makeDeck()
+    dealCards()
+    showPlayers()
