@@ -9,6 +9,7 @@ players = ['Naman', 'CrimeMasterGOGO', 'Bulla',
 pot = 0
 
 
+
 class card():
     def __init__(self):
         pass
