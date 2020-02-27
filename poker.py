@@ -26,6 +26,8 @@ class player():
     name = 'Player'
     card1 = card()
     card2 = card()
+    card3 = card()
+    cards = [card1, card2, card3]
 
     def __init__(self):
         pass
@@ -42,6 +44,10 @@ class player():
         pot += betAmount
 
 
+def firstBet():
+    pass
+
+
 def makeDeck():
     for i in suit:
         for j in face:
@@ -56,9 +62,12 @@ def dealCards():
         deck.remove(card1)
         card2 = random.choice(deck)
         deck.remove(card2)
+        card3 = random.choice(deck)
+        deck.remove(card3)
         newplayer = player()
         newplayer.card1 = card1
         newplayer.card2 = card2
+        newplayer.card3 = card3
         newplayer.setPlayerDetails(i)
         activePlayers.append(newplayer)
 
@@ -68,6 +77,7 @@ def showPlayers():
         i.printPlayer()
         i.card1.printCard()
         i.card2.printCard()
+        i.card3.printCard()
 
 
 if __name__ == "__main__":
