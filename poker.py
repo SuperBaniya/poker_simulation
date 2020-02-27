@@ -27,7 +27,6 @@ class player():
     card1 = card()
     card2 = card()
     card3 = card()
-    cards = [card1, card2, card3]
 
     def __init__(self):
         pass
