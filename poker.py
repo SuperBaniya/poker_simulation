@@ -6,6 +6,7 @@ activePlayers = []
 deck = []
 players = ['Naman', 'CrimeMasterGOGO', 'Bulla',
            'Modiji', 'Doodhwala', 'Homer Simpson', 'Ibu hatela']
+pot = 0
 
 
 class card():
@@ -36,12 +37,9 @@ class player():
     def printPlayer(self):
         print(self.name, self.pile)
 
-
-class table():
-    pot = 0
-
-    def __init__(self):
-        pass
+    def makeBet(self, betAmount):
+        self.pile -= betAmount
+        pot += betAmount
 
 
 def makeDeck():
