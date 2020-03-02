@@ -18,11 +18,22 @@ strength = {
 
 
 def colourSequence(a, b, c):
-    pass
+    if(a.suit == b.suit and b.suit == c.suit):
+        color = 1
+    seq = sequence(a, b, c)
+    if(seq and color):
+        return 1
+    else:
+        return 0
 
 
 def sequence(a, b, c):
-    pass
+    l = [strength[a], strength[b], strength[c]]
+    l.sort()
+    sequence = 0
+    if(l[0]+1 == l[1]and l[1]+1 == l[2]):
+        sequence = 1
+    return sequence
 
 
 def evaluateCards(card1, card2, card3):
@@ -36,7 +47,7 @@ def evaluateCards(card1, card2, card3):
     if card1.face == card2.face and card2.face == card3.face:
         score = 6
 
-    elif colourSequence(card1.face, card2.face, card3.face):
+    elif colourSequence(card1, card2, card3):
         score = 5
 
     elif sequence(card1.face, card2.face, card3.face):
