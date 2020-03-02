@@ -62,6 +62,7 @@ strength = {
 
 
 def colourSequence(a, b, c):
+    color = 0
     if(a.suit == b.suit and b.suit == c.suit):
         color = 1
     seq = sequence(a.face, b.face, c.face)
