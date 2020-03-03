@@ -1,6 +1,5 @@
 import random
 import evaluator
-
 face = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K')
 suit = ('C', 'S', 'D', 'H')
 activePlayers = []
@@ -8,6 +7,14 @@ deck = []
 players = ['Naman', 'CrimeMasterGOGO', 'Bulla',
            'Modiji', 'Doodhwala', 'Homer Simpson', 'Ibu hatela']
 pot = 0
+
+
+def newgame():
+    activePlayers = []
+    deck = []
+    players = ['Naman', 'CrimeMasterGOGO', 'Bulla',
+               'Modiji', 'Doodhwala', 'Homer Simpson', 'Ibu hatela']
+    pot = 0
 
 
 class card():
@@ -78,6 +85,8 @@ def sequence(a, b, c):
     sequence = 0
     if(l[0]+1 == l[1]and l[1]+1 == l[2]):
         sequence = 1
+    elif(l[0]+1 == 3 and l[1]+1 == 4 and l[2]+1 == 15):
+        sequence = 1
     return sequence
 
 
@@ -85,35 +94,43 @@ def evaluateCards(card1, card2, card3):
     score = 0
     cards = [card1, card2, card3]
     highcard = 2
+    pairhighcard = 2
+    hand = "highcard"
     for i in cards:
         if strength[i.face] > highcard:
             highcard = strength[i.face]
+            pairhighcard = highcard
 
     if card1.face == card2.face and card2.face == card3.face:
         score = 6
+        hand = 'Trio'
 
     elif colourSequence(card1, card2, card3):
         score = 5
+        hand = 'Pure Sequence'
 
     elif sequence(card1.face, card2.face, card3.face):
         score = 4
+        hand = 'Sequence'
 
     elif card1.suit == card2.suit and card2.suit == card3.suit:
         score = 3
+        hand = 'Colour'
 
     elif card1.face == card2.face:
         score = 2
-        highcard = strength[card1.face]
+        pairhighcard = strength[card1.face]
+        hand = 'pair'
 
     elif card1.face == card3.face:
         score = 2
-        highcard = strength[card1.face]
-
+        pairhighcard = strength[card1.face]
+        hand = 'pair'
     elif card2.face == card3.face:
         score = 2
-        highcard = strength[card2.face]
-
-    return score, highcard
+        pairhighcard = strength[card2.face]
+        hand = 'pair'
+    return score, highcard, hand, pairhighcard
 
 
 def firstBet():
@@ -142,6 +159,13 @@ def dealCards():
         newplayer.card3 = card3
         newplayer.setPlayerDetails(i)
         activePlayers.append(newplayer)
+        # print("player cards:: ")
+        # newplayer.card1.printCard()
+        # newplayer.card2.printCard()
+        # newplayer.card3.printCard()
+        # print("new deck::")
+        # for i in deck:
+        #     i.printCard()
 
 
 def showPlayers():
@@ -154,6 +178,10 @@ def showPlayers():
 
 
 if __name__ == "__main__":
-    makeDeck()
-    dealCards()
-    showPlayers()
+    for _ in range(100):
+        activePlayers = []
+        deck = []
+        makeDeck()
+        dealCards()
+        showPlayers()
+        print("_____________\n")
