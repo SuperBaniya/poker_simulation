@@ -18,6 +18,9 @@ class card():
     def printCard(self):
         print(self.face, self.suit)
 
+    def getcard(self):
+        return str([self.face, self.suit])
+
     def makecard(self, f, s):
         self.face = f
         self.suit = s
@@ -137,8 +140,15 @@ if __name__ == "__main__":
         cnt = 1
         p = []
         for i in activePlayers:
-            p.append(str(i.card1, i.card2, i.card3))
-
+            p.append(
+                str([i.card1.getcard(), i.card2.getcard(), i.card3.getcard()]))
+        bestplayer = activePlayers[0]
+        for i in activePlayers:
+            if(evaluateCards(i.card1, i.card2, i.card3)[0] > evaluateCards(bestplayer.card1, bestplayer.card2, bestplayer.card3)[0]):
+                i = bestplayer
+        bestplayername = bestplayer.name
+        bestplayerhand = str(
+            [bestplayer.card1.getcard(), bestplayer.card2.getcard(), bestplayer.card3.getcard()])
         while(len(activePlayers) > 1):
             for i in activePlayers:
                 if(i.pack() == True and len(activePlayers) > 1):
@@ -153,7 +163,8 @@ if __name__ == "__main__":
             showPlayers()
             print("_________")
         winner = activePlayers[0]
-        winnerhand = str(winner.card1, winner.card2, winner.card3)
+        winnerhand = str(
+            [winner.card1.getcard(), winner.card2.getcard(), winner.card3.getcard()])
         winner = winner.name
         print(" ----WINNER!!!!---- ")
         showPlayers()
