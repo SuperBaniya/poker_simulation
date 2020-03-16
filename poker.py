@@ -1,20 +1,14 @@
 import random
-import evaluator
+from evaluator import *
+import numpy as np
+import pandas as pd
+
 face = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K')
 suit = ('C', 'S', 'D', 'H')
 activePlayers = []
 deck = []
-players = ['Naman', 'CrimeMasterGOGO', 'Bulla',
-           'Modiji', 'Doodhwala', 'Homer Simpson', 'Ibu hatela']
+players = ['P1', 'P2', 'P3', 'P4', 'P5']
 pot = 0
-
-
-def newgame():
-    activePlayers = []
-    deck = []
-    players = ['Naman', 'CrimeMasterGOGO', 'Bulla',
-               'Modiji', 'Doodhwala', 'Homer Simpson', 'Ibu hatela']
-    pot = 0
 
 
 class card():
@@ -46,9 +40,11 @@ class player():
     def printPlayer(self):
         print(self.name, self.pile)
 
-    def makeBet(self, betAmount):
-        self.pile -= betAmount
-        pot += betAmount
+    def pack(self):
+        if(evaluateCards(self.card1, self.card2, self.card3)[0] <= 3 and random.randint(1, 5) > 2):
+            return True
+        else:
+            return False
 
 
 strength = {
@@ -88,53 +84,6 @@ def sequence(a, b, c):
     elif(l[0]+1 == 3 and l[1]+1 == 4 and l[2]+1 == 15):
         sequence = 1
     return sequence
-
-
-def evaluateCards(card1, card2, card3):
-    score = 0
-    cards = [card1, card2, card3]
-    highcard = 2
-    pairhighcard = 2
-    hand = "highcard"
-    for i in cards:
-        if strength[i.face] > highcard:
-            highcard = strength[i.face]
-            pairhighcard = highcard
-
-    if card1.face == card2.face and card2.face == card3.face:
-        score = 6
-        hand = 'Trio'
-
-    elif colourSequence(card1, card2, card3):
-        score = 5
-        hand = 'Pure Sequence'
-
-    elif sequence(card1.face, card2.face, card3.face):
-        score = 4
-        hand = 'Sequence'
-
-    elif card1.suit == card2.suit and card2.suit == card3.suit:
-        score = 3
-        hand = 'Colour'
-
-    elif card1.face == card2.face:
-        score = 2
-        pairhighcard = strength[card1.face]
-        hand = 'pair'
-
-    elif card1.face == card3.face:
-        score = 2
-        pairhighcard = strength[card1.face]
-        hand = 'pair'
-    elif card2.face == card3.face:
-        score = 2
-        pairhighcard = strength[card2.face]
-        hand = 'pair'
-    return score, highcard, hand, pairhighcard
-
-
-def firstBet():
-    pass
 
 
 def makeDeck():
@@ -178,10 +127,33 @@ def showPlayers():
 
 
 if __name__ == "__main__":
+    minbet = 20
     for _ in range(100):
+        pot = 0
         activePlayers = []
         deck = []
         makeDeck()
         dealCards()
+        cnt = 1
+        p = []
+        for i in activePlayers:
+            p.append(str(i.card1, i.card2, i.card3))
+
+        while(len(activePlayers) > 1):
+            for i in activePlayers:
+                if(i.pack() == True and len(activePlayers) > 1):
+                    print(i.name, "PACK")
+                    activePlayers.remove(i)
+            for i in activePlayers:
+                i.pile -= minbet
+                pot += minbet
+            activePlayers = list(np.roll(activePlayers, -1))
+            print("PLAYERS LEFT AFTER ROUND :: ", cnt)
+            cnt += 1
+            showPlayers()
+            print("_________")
+        winner = activePlayers[0]
+        winnerhand = str(winner.card1, winner.card2, winner.card3)
+        winner = winner.name
+        print(" ----WINNER!!!!---- ")
         showPlayers()
-        print("_____________\n")
