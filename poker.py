@@ -13,7 +13,7 @@ pot = 0
 
 
 class card():
-    def __init__(self):
+    def _init_(self):
         pass
 
     def printCard(self):
@@ -34,7 +34,7 @@ class player():
     card2 = card()
     card3 = card()
 
-    def __init__(self):
+    def _init_(self):
         pass
 
     def setPlayerDetails(self, name, buyin=10000):
@@ -45,12 +45,15 @@ class player():
         print(self.name, self.pile)
 
     def pack(self):
-        if((evaluateCards(self.card1, self.card2, self.card3)[0] <= 3 and random.randint(1, 6) > 2) or (evaluateCards(self.card1, self.card2, self.card3)[0] > 3 and random.randint(1, 10) == 2)):
+        if(evaluateCards(self.card1, self.card2, self.card3)[0] >=5 or random.randint(1, 1000) == 42):
+            return False
+        elif((evaluateCards(self.card1, self.card2, self.card3)[0] <= 2 and random.randint(1, 6) > 2) or (evaluateCards(self.card1, self.card2, self.card3)[0] > 3 and random.randint(1, 10) == 2)):
             return True
         else:
             return False
-
-
+    def pack2(self):
+        self.confidence = evaluateCards(self.card1, self.card2, self.card3)[0] ** 3 + evaluateCards(self.card1, self.card2, self.card3)[1]
+        return self.confidence
 strength = {
     '2': 2,
     '3': 3,
@@ -142,49 +145,50 @@ def getplayercards(player):
 
 
 if __name__ == "__main__":
-    df = []
-    for _ in range(10000):
-        minbet = 20
-        pot = 0
-        activePlayers = []
-        deck = []
-        makeDeck()
-        dealCards()
-        cnt = 1
-        p = []
-        for i in activePlayers:
-            p.append(getplayercards(i))
+    for __ in range(1):
+        df = []
+        for _ in range(10000):
+            minbet = 20
+            pot = 0
+            activePlayers = []
+            deck = []
+            makeDeck()
+            dealCards()
+            cnt = 1
+            p = []
+            for i in activePlayers:
+                p.append(getplayercards(i))
 
-        bestplayer = activePlayers[0]
-        for i in activePlayers:
-            if(evaluateCards(i.card1, i.card2, i.card3)[0] > evaluateCards(bestplayer.card1, bestplayer.card2, bestplayer.card3)[0]):
-                bestplayer = i
-        bestplayername = bestplayer.name
-        bestplayerhand = str(bestplayer.card1.getcard(
-        ))+str(bestplayer.card2.getcard())+str(bestplayer.card3.getcard())
-        while(len(activePlayers) > 1):
+            bestplayer = activePlayers[0]
             for i in activePlayers:
-                if((i.pack() == True and len(activePlayers) > 1) or i.pile <= minbet):
-                    print(i.name, "PACK")
-                    activePlayers.remove(i)
-            for i in activePlayers:
-                i.pile -= minbet
-                pot += minbet
-            activePlayers = list(np.roll(activePlayers, -1))
-            print("PLAYERS LEFT AFTER ROUND :: ", cnt)
-            cnt += 1
+                if(evaluateCards(i.card1, i.card2, i.card3)[0] > evaluateCards(bestplayer.card1, bestplayer.card2, bestplayer.card3)[0]):
+                    bestplayer = i
+            bestplayername = bestplayer.name
+            bestplayerhand = str(bestplayer.card1.getcard(
+            ))+str(bestplayer.card2.getcard())+str(bestplayer.card3.getcard())
+            while(len(activePlayers) > 1):
+                for i in activePlayers:
+                    if((i.pack() == True and len(activePlayers) > 1) or i.pile <= minbet):
+                        print(i.name, "PACK")
+                        activePlayers.remove(i)
+                for i in activePlayers:
+                    i.pile -= minbet
+                    pot += minbet
+                activePlayers = list(np.roll(activePlayers, -1))
+                print("PLAYERS LEFT AFTER ROUND :: ", cnt)
+                cnt += 1
+                showPlayers()
+                minbet = minbet*2
+                print("___")
+            winner = activePlayers[0]
+            winner.pile += pot
+            pot = 0
+            winnerhand = str(winner.card1.getcard()) + \
+                str(winner.card3.getcard())+str(winner.card2.getcard())
+            print(" ----WINNER!!!!---- ")
             showPlayers()
-            minbet = minbet*2
-            print("_________")
-        winner = activePlayers[0]
-        winner.pile += pot
-        pot = 0
-        winnerhand = str(winner.card1.getcard()) + \
-            str(winner.card3.getcard())+str(winner.card2.getcard())
-        print(" ----WINNER!!!!---- ")
-        showPlayers()
-        df.append({'p1': p[0], 'p2': p[1], 'p3': p[2], 'p4': p[3], 'p5': p[4], 'winner': winner.name,
-                   'winner hand': winnerhand, 'winner hand name': getplayerhandname(winner), 'best player': bestplayername, 'best player hand': bestplayerhand, 'best player hand name': getplayerhandname(bestplayer), "winning amount": winner.pile, "no of games played": cnt})
-    df2 = pd.DataFrame(df)
-    print(df2)
-    df2.to_csv('results/csvs/result.csv', mode='a', index=False, header="")
+            df.append({'p1': p[0], 'p2': p[1], 'p3': p[2], 'p4': p[3], 'p5': p[4], 'winner': winner.name,
+                    'winner hand': winnerhand, 'winner hand name': getplayerhandname(winner), 'best player': bestplayername, 'best player hand': bestplayerhand, 'best player hand name': getplayerhandname(bestplayer), "winning amount": winner.pile, "no of games played": cnt,"confidence of best player":bestplayer.pack2(),"confidence of winner":winner.pack2()})
+        df2 = pd.DataFrame(df)
+        print(df2)
+        df2.to_csv('results/csvs/smarter2.csv', mode='a', index=False)
