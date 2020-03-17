@@ -142,9 +142,9 @@ def getplayercards(player):
 
 
 if __name__ == "__main__":
-    minbet = 20
     df = []
     for _ in range(10000):
+        minbet = 20
         pot = 0
         activePlayers = []
         deck = []
