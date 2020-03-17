@@ -11,3 +11,4 @@ csvs/file1.csv
 __pycache__/poker.cpython-37.pyc
 results/csvs/file1.csv
 results/csvs/result.csv
+*.pyc
