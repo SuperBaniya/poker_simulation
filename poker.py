@@ -19,7 +19,7 @@ class card():
         print(self.face, self.suit)
 
     def getcard(self):
-        return str([self.face, self.suit])
+        return str(self.face) + str(self.suit) + " "
 
     def makecard(self, f, s):
         self.face = f
@@ -89,6 +89,10 @@ def sequence(a, b, c):
     return sequence
 
 
+def getplayerstrength():
+    pass
+
+
 def makeDeck():
     for i in suit:
         for j in face:
@@ -129,8 +133,18 @@ def showPlayers():
         print(evaluateCards(i.card1, i.card2, i.card3))
 
 
+def getplayercards(player):
+    c1 = player.card1.getcard()
+    c2 = player.card2.getcard()
+    c3 = player.card3.getcard()
+    return c1+c2+c3
+
+
 if __name__ == "__main__":
     minbet = 20
+    df = []
+    df1 = pd.DataFrame([{'p1': "p[0]", 'p2': "p[0]", 'p3': "p[0]", 'p4': "p[0]", 'p5': "p[0]", 'winner': "winner.name",
+                         'winner hand': "winnerhand", 'best player': "bestplayername", 'best player hand': "bestplayerhand"}])
     for _ in range(100):
         pot = 0
         activePlayers = []
@@ -140,18 +154,18 @@ if __name__ == "__main__":
         cnt = 1
         p = []
         for i in activePlayers:
-            p.append(
-                str([i.card1.getcard(), i.card2.getcard(), i.card3.getcard()]))
+            p.append(getplayercards(i))
+
         bestplayer = activePlayers[0]
         for i in activePlayers:
             if(evaluateCards(i.card1, i.card2, i.card3)[0] > evaluateCards(bestplayer.card1, bestplayer.card2, bestplayer.card3)[0]):
-                i = bestplayer
+                bestplayer = i
         bestplayername = bestplayer.name
-        bestplayerhand = str(
-            [bestplayer.card1.getcard(), bestplayer.card2.getcard(), bestplayer.card3.getcard()])
+        bestplayerhand = str(bestplayer.card1.getcard(
+        ))+str(bestplayer.card2.getcard())+str(bestplayer.card3.getcard())
         while(len(activePlayers) > 1):
             for i in activePlayers:
-                if(i.pack() == True and len(activePlayers) > 1):
+                if((i.pack() == True and len(activePlayers) > 1) or i.pile <= minbet):
                     print(i.name, "PACK")
                     activePlayers.remove(i)
             for i in activePlayers:
@@ -163,8 +177,13 @@ if __name__ == "__main__":
             showPlayers()
             print("_________")
         winner = activePlayers[0]
-        winnerhand = str(
-            [winner.card1.getcard(), winner.card2.getcard(), winner.card3.getcard()])
-        winner = winner.name
+        winner.pile += pot
+        pot = 0
+        winnerhand = str(winner.card1.getcard()) + \
+            str(winner.card3.getcard())+str(winner.card2.getcard())
         print(" ----WINNER!!!!---- ")
         showPlayers()
+        df.append({'p1': p[0], 'p2': p[1], 'p3': p[2], 'p4': p[3], 'p5': p[4], 'winner': winner.name,
+                   'winner hand': winnerhand, 'best player': bestplayername, 'best player hand': bestplayerhand})
+    print(df)
+    df2 = pd.DataFrame(df)
