@@ -2,6 +2,7 @@ import random
 from evaluator import *
 import numpy as np
 import pandas as pd
+from sqlalchemy import create_engine
 
 face = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K')
 suit = ('C', 'S', 'D', 'H')
@@ -44,7 +45,7 @@ class player():
         print(self.name, self.pile)
 
     def pack(self):
-        if(evaluateCards(self.card1, self.card2, self.card3)[0] <= 3 and random.randint(1, 5) > 2):
+        if((evaluateCards(self.card1, self.card2, self.card3)[0] <= 3 and random.randint(1, 6) > 2) or (evaluateCards(self.card1, self.card2, self.card3)[0] > 3 and random.randint(1, 10) == 2)):
             return True
         else:
             return False
@@ -89,8 +90,8 @@ def sequence(a, b, c):
     return sequence
 
 
-def getplayerstrength():
-    pass
+def getplayerhandname(player):
+    return evaluateCards(player.card1, player.card2, player.card3)[2]
 
 
 def makeDeck():
@@ -143,9 +144,7 @@ def getplayercards(player):
 if __name__ == "__main__":
     minbet = 20
     df = []
-    df1 = pd.DataFrame([{'p1': "p[0]", 'p2': "p[0]", 'p3': "p[0]", 'p4': "p[0]", 'p5': "p[0]", 'winner': "winner.name",
-                         'winner hand': "winnerhand", 'best player': "bestplayername", 'best player hand': "bestplayerhand"}])
-    for _ in range(100):
+    for _ in range(10000):
         pot = 0
         activePlayers = []
         deck = []
@@ -175,6 +174,7 @@ if __name__ == "__main__":
             print("PLAYERS LEFT AFTER ROUND :: ", cnt)
             cnt += 1
             showPlayers()
+            minbet = minbet*2
             print("_________")
         winner = activePlayers[0]
         winner.pile += pot
@@ -184,6 +184,7 @@ if __name__ == "__main__":
         print(" ----WINNER!!!!---- ")
         showPlayers()
         df.append({'p1': p[0], 'p2': p[1], 'p3': p[2], 'p4': p[3], 'p5': p[4], 'winner': winner.name,
-                   'winner hand': winnerhand, 'best player': bestplayername, 'best player hand': bestplayerhand})
-    print(df)
+                   'winner hand': winnerhand, 'winner hand name': getplayerhandname(winner), 'best player': bestplayername, 'best player hand': bestplayerhand, 'best player hand name': getplayerhandname(bestplayer), "winning amount": winner.pile, "no of games played": cnt})
     df2 = pd.DataFrame(df)
+    print(df2)
+    df2.to_csv('results/csvs/result.csv', mode='a', index=False, header="")
