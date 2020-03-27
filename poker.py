@@ -2,7 +2,6 @@ import random
 from evaluator import *
 import numpy as np
 import pandas as pd
-from sqlalchemy import create_engine
 
 face = ('A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K')
 suit = ('C', 'S', 'D', 'H')
@@ -29,13 +28,14 @@ class card():
 
 class player():
     pile = 100000
-    name = 'Player'
+    name = 'P1'
     card1 = card()
     card2 = card()
     card3 = card()
 
     def __init__(self):
-        pass
+        self.df_playerconfidence = pd.read_csv("mlfiles\\confidenceValues.csv", usecols=[
+            'P1', 'P2', 'P3', 'P4', 'P5'])
 
     def setPlayerDetails(self, name, buyin=10000):
         self.pile = buyin
@@ -45,10 +45,26 @@ class player():
         print(self.name, self.pile)
 
     def pack(self):
+        rand = []
         if((evaluateCards(self.card1, self.card2, self.card3)[0] <= 3 and random.randint(1, 6) > 2) or (evaluateCards(self.card1, self.card2, self.card3)[0] > 3 and random.randint(1, 10) == 2)):
-            return True
+            rand = rand+[True, True, True, True, True]
         else:
-            return False
+            rand = rand + [False, False, False, False, False]
+        confidence = self.df_playerconfidence[self.name].iloc[-1]
+        print(confidence)
+        for i in range(confidence*5):
+            if(random.randint(0, 100) % 2):
+                rand.append(True)
+            else:
+                rand.append(False)
+        for i in range(5):
+            if(random.randint(0, 100) % 2):
+                rand.append(True)
+            else:
+                rand.append(False)
+        print(rand)
+
+        return(random.choice(rand))
 
 
 strength = {
@@ -116,13 +132,6 @@ def dealCards():
         newplayer.card3 = card3
         newplayer.setPlayerDetails(i)
         activePlayers.append(newplayer)
-        # print("player cards:: ")
-        # newplayer.card1.printCard()
-        # newplayer.card2.printCard()
-        # newplayer.card3.printCard()
-        # print("new deck::")
-        # for i in deck:
-        #     i.printCard()
 
 
 def showPlayers():
@@ -143,7 +152,7 @@ def getplayercards(player):
 
 if __name__ == "__main__":
     df = []
-    for _ in range(10000):
+    for _ in range(100):
         minbet = 20
         pot = 0
         activePlayers = []
@@ -185,6 +194,19 @@ if __name__ == "__main__":
         showPlayers()
         df.append({'p1': p[0], 'p2': p[1], 'p3': p[2], 'p4': p[3], 'p5': p[4], 'winner': winner.name,
                    'winner hand': winnerhand, 'winner hand name': getplayerhandname(winner), 'best player': bestplayername, 'best player hand': bestplayerhand, 'best player hand name': getplayerhandname(bestplayer), "winning amount": winner.pile, "no of games played": cnt})
+        conf = pd.read_csv("mlfiles\\confidenceValues.csv",
+                           usecols=['P1', 'P2', 'P3', 'P4', 'P5'])
+        conf.at[0, 'P1'] = conf.at[0, 'P1']-1 if conf.at[0, 'P1'] > 0 else 1
+        conf.at[0, 'P2'] = conf.at[0, 'P2']-1 if conf.at[0, 'P2'] > 0 else 1
+        conf.at[0, 'P3'] = conf.at[0, 'P3']-1 if conf.at[0, 'P3'] > 0 else 1
+        conf.at[0, 'P4'] = conf.at[0, 'P4']-1 if conf.at[0, 'P4'] > 0 else 1
+        conf.at[0, 'P5'] = conf.at[0, 'P5']-1 if conf.at[0, 'P5'] > 0 else 1
+        conf.at[0,
+                winner.name] = conf.at[0, winner.name]+3
+
+        if(conf.at[0, winner.name] > 20):
+            conf.at[0, winner.name] = 20
+        conf.to_csv("mlfiles\\confidenceValues.csv")
     df2 = pd.DataFrame(df)
     print(df2)
     df2.to_csv('results/csvs/result.csv', mode='a', index=False, header="")
