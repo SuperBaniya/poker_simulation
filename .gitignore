@@ -13,3 +13,7 @@ results/csvs/file1.csv
 results/csvs/result.csv
 *.pyc
 __pycache__/poker.cpython-37.pyc
+results/csvs/result2.csv
+results/csvs/smarter.csv
+results/csvs/smarter2.csv
+startpl.bat

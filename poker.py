@@ -12,7 +12,7 @@ pot = 0
 
 
 class card():
-    def __init__(self):
+    def _init_(self):
         pass
 
     def printCard(self):
@@ -173,15 +173,35 @@ if __name__ == "__main__":
         ))+str(bestplayer.card2.getcard())+str(bestplayer.card3.getcard())
         while(len(activePlayers) > 1):
             for i in activePlayers:
-                if((i.pack() == True and len(activePlayers) > 1) or i.pile <= minbet):
-                    print(i.name, "PACK")
-                    activePlayers.remove(i)
+                p.append(getplayercards(i))
+
+            bestplayer = activePlayers[0]
             for i in activePlayers:
-                i.pile -= minbet
-                pot += minbet
-            activePlayers = list(np.roll(activePlayers, -1))
-            print("PLAYERS LEFT AFTER ROUND :: ", cnt)
-            cnt += 1
+                if(evaluateCards(i.card1, i.card2, i.card3)[0] > evaluateCards(bestplayer.card1, bestplayer.card2, bestplayer.card3)[0]):
+                    bestplayer = i
+            bestplayername = bestplayer.name
+            bestplayerhand = str(bestplayer.card1.getcard(
+            ))+str(bestplayer.card2.getcard())+str(bestplayer.card3.getcard())
+            while(len(activePlayers) > 1):
+                for i in activePlayers:
+                    if((i.pack() == True and len(activePlayers) > 1) or i.pile <= minbet):
+                        print(i.name, "PACK")
+                        activePlayers.remove(i)
+                for i in activePlayers:
+                    i.pile -= minbet
+                    pot += minbet
+                activePlayers = list(np.roll(activePlayers, -1))
+                print("PLAYERS LEFT AFTER ROUND :: ", cnt)
+                cnt += 1
+                showPlayers()
+                minbet = minbet*2
+                print("___")
+            winner = activePlayers[0]
+            winner.pile += pot
+            pot = 0
+            winnerhand = str(winner.card1.getcard()) + \
+                str(winner.card3.getcard())+str(winner.card2.getcard())
+            print(" ----WINNER!!!!---- ")
             showPlayers()
             minbet = minbet*2
             print("_________")
